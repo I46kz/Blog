@@ -18,4 +18,11 @@ The file will have its original line endings in your working directory
 
 そもそもGit bushをWindowsでは使ったほうが良さそう
 - https://ikuten.com/github-newrepoditory   
-- https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E5%9F%BA%E6%9C%AC-%E5%A4%89%E6%9B%B4%E5%86%85%E5%AE%B9%E3%81%AE%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E3%81%B8%E3%81%AE%E8%A8%98%E9%8C%B2
+- https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E5%9F%BA%E6%9C%AC-%E5%A4%89%E6%9B%B4%E5%86%85%E5%AE%B9%E3%81%AE%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E3%81%B8%E3%81%AE%E8%A8%98%E9%8C%B2  
+
+pushする際にerror:failed to push some refsとなる  
+- https://qiita.com/kazuki0714/items/ceda3a6721a9a99082de  
+- https://qiita.com/yoshixj/items/6441ab2cd6bc367e607d  
+
+
+
