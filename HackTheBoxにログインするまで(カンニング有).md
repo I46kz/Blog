@@ -35,7 +35,7 @@
 Invite Codeを見つけるにあたって、昔の職場の先輩(転職済)の方から、
 「WebページのCTFをやるのならまずは開発者ツールを見ていくといいよ～」と前にちょろっと教えてもらっていたので、Chromeで開発者ツールを開いて見ていった。  
 
-![画像2](./HTB_InviteChallenge_.PNG)<!--画像のリンク頼-->
+![画像2](./HTB_SignUP/HTB_InviteChallenge_.PNG)<!--画像のリンク頼-->
 開いてまず出てくる、Elementsのタブでリンクとして表示されているものにアクセスしていってみた。リンクは下記の3つ。
 - "https://www.hackthebox.eu/js/htb-frontend.min.js"  
 - /js/inviteapi.min.js  
@@ -43,18 +43,18 @@ Invite Codeを見つけるにあたって、昔の職場の先輩(転職済)の�
 
 まずひとつ目のリンク("https://www.hackthebox.eu/js/htb-frontend.min.js")にアクセスすると以下のページが出てきました。  
 <!---画像のリンク-->
-![1個めのリンク](./HTB_Link01.PNG)  
+![1個めのリンク](./HTB_SignUp/HTB_Link01.PNG)  
 ｳｷﾞｷﾞ、ﾅﾝﾀﾞｺﾚﾊ、ﾀｽｹﾃとなったので、他もアクセスしてみて分からなかったらまた探しに来ようと決めて、次へ。  
 
 ふたつ目のリンク(/js/inviteapi.min.js)  
 な、なんだこれは、どうやってアクセスすればいいんだぁー！となって、色々調べる。結果、Webサーバーとかドメインの意味とかに行き着く。そして、ふと、あれ、これ他のリンクと一緒でhttps://www.hackthebox.eu を付ければいいんじゃね？と閃きやってみたところ、本当にそのとおり、ページが開いた。
-![2個目のリンク](./HTB_Link02.PNG)
+![2個目のリンク](./HTB_SignUp/HTB_Link02.PNG)
 ただし、これも上記と一緒でよくわからんページに。eval(function(p,a,c,k,e,r)ってのがどうやらjavascriptで難読化されたものを表すものらしい・・・？(/packer/というツール?で行われたものらしい。分からん。このへんも勉強しなければ・・・)とりあえずもう最後のリンクも開いてみる。~~保留という名の諦め。~~<!--画像のリン-->  
 
 最後のリンク、"https://www.hackthebox.eu/js/calm.jsにアクセスしたところ"、なんかドクロ出てきた・・・
-![3個目のリンク(ドクロページ)](./HTB_Link03.PNG)
+![3個目のリンク(ドクロページ)](./HTB_SignUp/HTB_Link03.PNG)
 console.logから始まっていたので、HTBのトップページについて開いていたchromeの開発者ツールに戻り、Consoleタブを開いてみたところ、このドクロ、いる～～～！！！となる。
-![Consoleドクロ](./HTB_InviteChallenge_Console01.PNG)
+![Consoleドクロ](./HTB_SignUp/HTB_InviteChallenge_Console01.PNG)
 [このへん](https://www.sejuku.net/blog/27205)のページとかを調べてみたところ、やはりConsoleに任意の値とか文字列とかを表示するためのコマンドらしい。ここに関しては、あんまり(Sing Upのためには)関係なさそうだぁ、上記2つについてもう少し調べてみるかぁとなる。  
 
 ・・・結果なんもわからんとなる。  
@@ -66,7 +66,7 @@ javaをほんの、ほんの、ほんの少しかじってたので(javaとjavas
 数日後、やっぱSign Upまでは行きたいなとなり、*カンニング*を解禁。[このページ](https://codeburst.io/hack-the-box-how-to-get-invite-code-56e369fc8dae)に行き着く。  
 ここを見ていたところ、ふたつ目のリンクのページの"response ~"というところが怪しいと記載してある。どうやらjavascriptを実行する際の呼び出しのコマンドらしい。ホォーーーってなる。で、この人が言うには"makeInviteCode"ってコマンドが怪しいとのこと。
 Consoleタブの下のところに入れてみると、下記の画像のものが呼び出された。
-![consoleでmakeInviteCodeを入れた](./HTB_InviteChallenge_Console02.PNG)  
+![consoleでmakeInviteCodeを入れた](./HTB_SignUp/HTB_InviteChallenge_Console02.PNG)  
 <br>
 
 #### [再度自力で解いてみた](#出てきたものを解いていく)  
@@ -76,20 +76,20 @@ Consoleタブの下のところに入れてみると、下記の画像のもの�
 POST〜と書いてあって、偶然ちょっと前にPOSTとGETについてはちょろっと知ってた(初学者向けのネットワーク本ちょろっと読んでたのでなんとなくデータの送信方法?方式?だったな〜って感じで)ので、POSTでデータを送る方法を調べる。。。  
 chromeの拡張…というよりアプリが公式より出ているらしいので入れてみる。  
 なんかBASE64で難読化がかけられてるよ〜って親切に言ってる文章が返されてきた。
-![POST送信1回目](./HTB_InviteChallenge_POSTsend01.PNG)
+![POST送信1回目](./HTB_SignUp/HTB_InviteChallenge_POSTsend01.PNG)
 [CyberChef](https://gchq.github.io/CyberChef/)で難読化を解いてみると、再度POSTでデータを送ってみろって文章が出てきた。
-![POST送信2回目](./HTB_InviteChallenge_POSTsend02.PNG)
+![POST送信2回目](./HTB_SignUp/HTB_InviteChallenge_POSTsend02.PNG)
 再度POSTで送ってみたところ、謎の文章の羅列と"format" : "encorded"の文字が。出てきた。。。これは！ということで最初にアクセスしたページのInvitCodeの部分に入れてみると・・・
-![POST送信3回目](./HTB_InviteChallenge_POSTsend03.PNG)  
+![POST送信3回目](./HTB_SignUp/HTB_InviteChallenge_POSTsend03.PNG)  
 
 <br>
 
 #### [なぜか解けなかった・・・](#まさかの入力ミス)  
 そして、やってみたところ、入力ミスの文字が。
-![InviteCode一回目入力→ミス](./HTB_InviteChallenge_TOP_miss01.PNG)  
+![InviteCode一回目入力→ミス](./HTB_SignUp/HTB_InviteChallenge_TOP_miss01.PNG)  
 えぇ。。。となり、手詰まったため、もう一度1からやってみる。  
 と、次はPOSTでデータを送った際に難読化がBASE64を指定していた部分がROT13になっている！
-![POST送信4回目](./HTB_InviteChallenge_POSTsend04.PNG)
+![POST送信4回目](./HTB_SignUp/HTB_InviteChallenge_POSTsend04.PNG)
 POSTの送信先は同じだったので、再度同じようにPOSTで送ってみるとまた"encoded"の文字とともにまた難読化されてるっぽい意味不明な文字列が・・・  
 再度CyberChefで次はROT13でやってみると、文字化けたっぽい文字列が出てきた。  
 それでは、ということでBASE64でやってみたところ、最初に解けた際と同じような5文字×5のランダムな文字列が！がしかし、最初と文字列の内容自体は違ったので「一回目この文字列入れてダメだったけどもう一回やってみるか～」ということで、トップページのInviteCodeの部分にこの文字列を入れてみた。  
@@ -97,7 +97,7 @@ POSTの送信先は同じだったので、再度同じようにPOSTで送って
 
 #### [(カンニング込みで)HackTheBoxにログイン出来るようになった話](#(カンニング込みで)HackTheBoxにログイン出来るようになった話)
 上記のものを入れてみると***Congratulation***の文字が！！！！！！
-![Sing up成功](HTB_InviteChallenge_congratulation.PNG)
+![Sing up成功](./HTB_SignUp/HTB_InviteChallenge_congratulation.PNG)
 ログイン用のアカウントの作成を行ってSign Inすると、各国のランキングとか出てくる。。。  
 どうやらInviteCodeは常にランダムで生成されているらしく、ちゃんと手順を踏んで、一定時間内に解いて該当の部分に文字列を入れないといけなかったぽい(もしくは普通にコードのコピペを間違ってたかも・・・)よく出来てるなぁ・・・  
 利用するには基本的にVPNとかつなぐ必要があるらしいとのことなので、次は準備とかの話をしたりとか今回分からなかった知識の部分をしたいです。  
