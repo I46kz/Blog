@@ -19,29 +19,47 @@ Windows上でのEdgeデータは次の場所から入手することが出来ま
 
 キャッシュは**キャッシュサブフォルダ**に保存され、インデックスファイル(index)・データブロックファイル(data_#)・データファイル(f_######)からなっています。NirSoftの[ChromeCacheView](https://www.nirsoft.net/utils/chrome_cache_view.html)を使用するとこれらのファイルを簡単に解析できます。  
 
+![Microsoft Edge cache parsed with ChromeCacheView](./ChromiumEdgeHistoryData/screenshot01.png)
+
 Cookieは、**Cookie**と呼ばれるSQLiteデータベースに保存されます。Cookieが必要です。該当のクエリを次に示します：<!--cookieクエリ画像-->  
+
+![Microsoft Edge cookies](./ChromiumEdgeHistoryData/screenshot02.png)
 
 ご覧のように、**datetime関数**<!--http://bit.ly/2xfGJVF-->を使用してWebKit形式のタイムスタンプを簡単に変換することができます。  
 
 Microsoft Edgeでダウンロードされたファイルの情報は**History SQLiteデータベース**から取得できます。  
 
+![Microsoft Edge downloads](./ChromiumEdgeHistoryData/screenshot03.png)
+
 もうひとつ便利なテーブルは**urls**です。繰り返しになりますが、シンプルなクエリを使用して訪問したサイトとタイムスタンプに関する情報を取得することができます。  
+
+![Microsoft Edge visited sites](./ChromiumEdgeHistoryData/screenshot04.png)
 
 Edgeはプロファイル・ロケーション・カード番号といった自動入力(オートフィル)情報を**Web Dataデータベース**内に保存します。保存された資格情報は、**Login Dataデータベース**に保存されます。**loginsテーブル**内のURLとそれに関連したログインデータを見つけることができます。  
 
 しかしながら、全てのパスワードは暗号化されています。NiftsoftのChromePassを使って復号化を試みることができます。このツールを使用すると、実行中のシステムまたは外部ドライブからパスワードを回復できます。エビデンス(証拠物)をどれぐらい簡単にマウントすることができるのかはここでは記しませんが、例えばFTK Imagerを使用して外部のドライブとして認識させます。必要なのはWindowsのユーザープロファイル(User Profile)<!--Windows Profileというのが原文。これでいいとは思うけど、違うかも。-->のパスワードのみです。  
 
+![ChromePass settings](./ChromiumEdgeHistoryData/screenshot05.png)
+
 その結果、オリジナルとアクセス用のURL<!--Origin URLとAction URLの違い-->、ユーザー名、パスワードなどの情報をプレーンテキストで取得し、さらに作成日時も知ることができます。  
+
+![Microsoft Edge saved credentials](./ChromiumEdgeHistoryData/screenshot06.png)
 
 プログレッシブウェブアプリケーション（PWA）はChromium Edgeの主要な機能の一つです。それを使用することで、デバイス上のウェブサイトについてウェブアプリケーションとして"インストール"することができます。より厳密に言うならば<!--In factの翻訳-->プロファイルディレクトリとアプリケーションIDを因数として取得し、アプリケーションシェル（static template<!--static templateをそのまま静的テンプレートって訳すのもなんか違う気がした。：https://dixq.net/forum/viewtopic.php?t=16674とか https://qiita.com/hmito/items/9d928322ca978319da59とか-->）を実行して、マニフェストファイルに記述されているURLから必要な動的コンテンツをロードするmsedge_proxy.exeがあります。
 
+![Installed webpage shortcut](./ChromiumEdgeHistoryData/screenshot07.png)
+
 そのマニフェストファイルは **Extensions\\<App_ID>** のサブフォルダに保存されます。<!--自分の会社PCにはExtensionsのフォルダ自体が作成されていなかった。Edgeで拡張機能を入れてないからか・・・？-->  
+
+![Microsoft Edge extensions and applications](./ChromiumEdgeHistoryData/screenshot08.png)
 
 同じフォルダーには、新しく追加された拡張機能のソースコードが含まれています。各拡張機能には、一意のIDで名前が付けられた独自のサブフォルダーがあります。  
 
 MacOS上のEdgeファイルは非常に似ており、以下にあります：  
 
 **/Users/\<username>/Library/Application Support/Microsoft Edge/Default**
+
+![MicrosoftEdge profile directory](./ChromiumEdgeHistoryData/screenshot09.png)
 
 ご覧の通り、ブックマーク、アクセスしたURL、ダウンロード、Cookieなどに関する情報は対応するファイルとSQLiteデータベースに保存されるため、前述の手法を使用してこのデータを取得できます。  
 
@@ -55,17 +73,27 @@ MacOS上では、キャッシュは **/Users/\<username>/Library/Caches/Microsof
 
 **application_identifier_tabテーブル**から正しいIDを見つけることから始めてみましょう。この場合、com.microsoft.msedgeのIDは121です。これにより見つかったIDを使用して**kvsテーブル**を確認し、 **application_identifier列**をフィルタリングすることができます。value列にはバイナリのplistが含まれており、エクスポートする必要があります。これは、例えばDBite for SQLiteを使用してこのタスクを解決できます。エクスポートすると、自分の気に入っているplistビューアで調べることができます。  
 
+![Exported binary plist contents](./ChromiumEdgeHistoryData/screenshot10.png)
+
 これにより、このMicrosoft EdgeのUUIDが565EC255-F158-48E1-83C5-D426BC60D22Dであることが確認でき、アプリケーションのデータを簡単に見つけることができます。  
 
 はじめに、アクセスの履歴が保存されているDocumentsサブフォルダーに配置された**Office Cache**のSQLiteデータベースを確認できます。アクセスしたURLは**ZONLINESEARCHHISTORYテーブル**にApple NSDate形式のタイムスタンプで保存され、次のクエリで取得できます。  
 
+![MicrosoftEdge browsing history](./ChromiumEdgeHistoryData/screenshot11.png)
+
 **OfflineCacheデータベース**には、ブラウザの追加のブックマークとデータも保存されるため、SQLiteの同じDBブラウザを使用してそれらを確認することもできます。
 
-アクセスの履歴に加えて、**Library/Caches/WebKit/NetworkCache/Version 14/Records/<Website_ID>/Resourceサブフォルダー**をチェックして、ダウンロードされたコンテンツについての見解を少しだけ得ることができます。
+アクセスの履歴に加えて、**Library/Caches/WebKit/NetworkCache/Version 14/Records/<Website_ID>/Resourceサブフォルダー**をチェックして、ダウンロードされたコンテンツについての見解を少しだけ得ることができます。  
+
+![MicrosoftEdge network cache](./ChromiumEdgeHistoryData/screenshot12.png)
 
 ご覧の通り<!--As you can see出過ぎ問題。原文の書いた人の癖を感じる。。。-->、任意のテキストエディタで開くことができる様々なファイルとBlob オブジェクト<!--https://hakuhin.jp/js/file.html ｜ http://5509.hatenablog.com/entry/2013/04/26/012658 この辺参照。Binary Large Objectの略で、32KB以上のデータをJavaScriptで扱う際に使用する。らしい。。。-->があります。運が良ければ、magic bytes<!--(ファイルシグネチャにおける、すでにリスト化(例：https://en.wikipedia.org/wiki/List_of_file_signatures(Wikipediaを出典に出すのもあれかもしれない・・・))されているファイルの正しい形式を識別できるもののこと。)-->のあるいくつかのblobを見つけることができ、そこからダウンロードしたコンテンツ自体を取得することが出来ます。  
 
+![Downloaded picture](./ChromiumEdgeHistoryData/screenshot13.png)
+
 他に便利なディレクトリは **/Library/Cookies/** / サブフォルダーです。ここでは[EdgeCookiesParser](https://github.com/HikaruHikarin/EdgeCookiesParser)で解析することができる、**Cookies.binarycookiesファイル**をみつけることが出来ます。  
+
+![Cokies.binarycookie parsed with EdgeCookiesParser](./ChromiumEdgeHistoryData/screenshot14.png)
 
 最後に、Androidも重要です。Androidにおける、Microsoft Edgeのデータを保持する方法はWindowsおよびMacOSと同じです。**/data/data/com.microsoft.emmx/app_chrome/Defaultフォルダ**を見ると全ての必要なファイルとSQLiteデータベースを確認できます。キャッシュは **/data/data/com.microsoft.emmx/cache/Cacheフォルダ**に保存されており、これはChromeCacheViewで解析することができます。  
 
