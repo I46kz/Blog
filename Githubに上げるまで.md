@@ -9,12 +9,18 @@ Githubに上げるまで
 
 教えてもらったときはMacだったのだが、WinでのGitの環境を整えるため、ひとまずGitを[インストール](https://git-scm.com/download/win)  
 
+ローカルのディレクトリをリモートのリポジトリとしてあげる場合  
+- https://qiita.com/pinevillage/items/4ccd3c3f59adcccdd7ef  
+
 CRLFに関するメッセージについて  
 warning: LF will be replaced by CRLF in "ファイル名".
 The file will have its original line endings in your working directory
 と出るのはなぜ？
 - https://qiita.com/ritsuka/items/e4e1b9aa36b83886ae17
 - https://tutorialmore.com/questions-1583513.htm  
+
+WindowsでTrueにしたい場合
+git config core.autocrlf true
 
 そもそもGit bushをWindowsでは使ったほうが良さそう
 - https://ikuten.com/github-newrepoditory   
