@@ -30,5 +30,9 @@ pushする際にerror:failed to push some refsとなる
 - https://qiita.com/kazuki0714/items/ceda3a6721a9a99082de  
 - https://qiita.com/yoshixj/items/6441ab2cd6bc367e607d  
 
+.gitignoreについて  
+- https://qiita.com/inabe49/items/16ee3d9d1ce68daa9fff  
+.gitignoreのチートシート  
+- https://wiseloan-cash.com/gitignore/  
 
 
